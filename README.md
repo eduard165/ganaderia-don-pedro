@@ -1,78 +1,135 @@
-# Ganadería Don Pedro — Next.js
+<div align="center">
 
-Sitio por páginas en Next.js App Router con React y TypeScript. El inicio presenta la ganadería y enlaza a las páginas independientes. La información de contacto y las preguntas frecuentes viven en un footer compartido por todo el sitio.
+  <img src="public/assets/logo-don-pedro.jpeg" alt="Ganadería Don Pedro" width="150" />
 
-## Iniciar en tu computadora
+  <h1>Ganadería Don Pedro</h1>
 
-Requiere Node.js 20.9 o superior. Desde una terminal en esta carpeta:
+  <p><strong>Tradición ganadera, presencia digital.</strong></p>
+
+  <p>Sitio web con catálogo interactivo y contacto por correo para una ganadería de Tlacotalpan, Veracruz, con historia desde 1940.</p>
+
+  <p>
+    <img src="https://img.shields.io/badge/Next.js-18181B?style=flat-square&logo=nextdotjs&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/React-18181B?style=flat-square&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/TypeScript-18181B?style=flat-square&logo=typescript&logoColor=3178C6" alt="TypeScript" />
+    <img src="https://img.shields.io/badge/CSS-18181B?style=flat-square&logo=css&logoColor=6392F1" alt="CSS" />
+  </p>
+
+  <p><a href="#el-proyecto">Proyecto</a> · <a href="#funcionalidades">Funcionalidades</a> · <a href="#ejecutar-en-local">Instalación</a> · <a href="#autor">Autor</a></p>
+
+</div>
+
+---
+
+## El proyecto
+
+Ganadería Don Pedro reúne identidad, historia y oferta ganadera en una experiencia web organizada por páginas. El visitante puede conocer las razas, explorar ejemplares y contactar a la ganadería desde cualquier sección.
+
+El diseño combina una paleta sobria, tipografía editorial e imágenes del campo. La navegación separa la presentación institucional del catálogo, mientras que el footer concentra el formulario, los datos de contacto y las preguntas frecuentes.
+
+La implementación utiliza **Next.js App Router, React y TypeScript**, con componentes compartidos y rutas de servidor para el catálogo y las consultas por correo.
+
+## Funcionalidades
+
+| Área | Experiencia |
+| --- | --- |
+| **Inicio** | Presentación de la ganadería y acceso a sus páginas principales. |
+| **Historia** | Espacio dedicado al origen y la tradición de Ganadería Don Pedro. |
+| **Genética** | Presentación de las razas Gyr y Sardo Negro, con enlaces al catálogo filtrado. |
+| **Ejemplares** | Catálogo con filtros y consulta de detalles en una ventana modal. |
+| **Contacto** | Formulario con asuntos predefinidos, raza de interés y validación de datos. |
+| **Correo** | Botón para copiar la dirección y envío desde el servidor mediante SMTP. |
+| **WhatsApp** | Acceso al chat con icono y número visible en el footer. |
+| **Preguntas frecuentes** | Respuestas desplegables sobre ejemplares, pedigree y cobertura. |
+| **Diseño adaptable** | Distribución para escritorio y celular, con menú móvil. |
+
+## Decisiones de implementación
+
+- **Páginas independientes:** cada área tiene su propia ruta y la navegación identifica la página activa.
+- **Componentes compartidos:** el encabezado y el footer mantienen la misma experiencia en todo el sitio.
+- **Catálogo desde el servidor:** los datos iniciales se entregan a React sin una petición adicional del navegador. La API permite consultar esos mismos registros en JSON.
+- **Contacto validado en ambos lados:** los asuntos permitidos se comparten entre el formulario y el servidor; “Otra consulta” requiere un mensaje.
+- **Confirmación de envío:** el formulario confirma cuando el servidor SMTP acepta la consulta. Si ocurre un error, conserva los datos para reintentar.
+- **Credenciales en el servidor:** la conexión SMTP se configura mediante variables de entorno.
+
+## Tecnologías
+
+| Tecnología | Uso |
+| --- | --- |
+| Next.js · App Router | Páginas, renderizado y rutas de servidor. |
+| React | Filtros, modal, menú móvil y formulario. |
+| TypeScript | Tipos del catálogo y validación de consultas. |
+| CSS | Identidad visual, estados interactivos y adaptación por tamaño de pantalla. |
+| Nodemailer | Envío de consultas mediante SMTP. |
+
+## Ejecutar en local
+
+Requiere **Node.js 20.9 o superior**. Desde la carpeta que contiene `package.json`:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abre http://localhost:3000. Guarda los archivos para ver tus cambios. Detén el servidor con Ctrl+C.
+Abre [http://localhost:3000](http://localhost:3000).
 
-Para verificar o generar una versión de producción:
+| Comando | Función |
+| --- | --- |
+| `npm run dev` | Inicia el entorno de desarrollo. |
+| `npm run typecheck` | Comprueba los tipos de TypeScript. |
+| `npm run build` | Genera la versión de producción. |
+| `npm start` | Ejecuta la versión generada por `build`. |
 
-```bash
-npm run typecheck
-npm run build
-npm start
+### Configurar el correo
+
+El sitio puede ejecutarse sin credenciales SMTP; para habilitar el envío, copia `.env.example` como `.env.local` y completa:
+
+```dotenv
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASSWORD=
+CONTACT_FROM_EMAIL=
+CONTACT_TO_EMAIL=udvtz@hotmail.com
 ```
 
-No necesitas ejecutar build para trabajar con dev.
+`CONTACT_FROM_EMAIL` debe ser un remitente autorizado por el proveedor. `CONTACT_TO_EMAIL` recibe las consultas; el correo del visitante se establece como **Reply-To** para responderle directamente.
 
-## Dónde editar
+El puerto `465` utiliza TLS directo; los demás requieren STARTTLS. Reinicia el servidor después de modificar las variables. En producción, configúralas en el servicio de hosting. `.env.local` está excluido de Git.
 
-- `src/app/page.tsx`: página de inicio.
-- `src/app/historia/page.tsx`: página de historia.
-- `src/app/genetica/page.tsx`: página de genética y razas.
-- `src/app/ejemplares/page.tsx`: catálogo; acepta el filtro inicial en `?raza=Gyr` o `?raza=Sardo%20Negro`.
-- `src/app/layout.tsx`: título, descripción y estructura global.
-- `src/app/globals.css`: estilos y adaptación a celular.
-- `src/components/header.tsx`: navegación entre páginas y menú móvil.
-- `src/components/footer.tsx`: pie común con contacto general, WhatsApp y preguntas frecuentes desplegables.
-- `src/components/catalog.tsx`: catálogo, filtros y detalle en modal.
-- `src/components/breed-link.tsx`: enlaces a la página de ejemplares filtrada por raza.
-- `src/lib/catalog.ts`: tipos y registros de ejemplo; punto de sustitución por la fuente real de datos.
-- `src/app/api/ejemplares/route.ts`: ruta GET de servidor con catálogo de ejemplo.
-- `public/assets/`: imágenes ilustrativas.
+## Organización del código
 
-## Base para crecimiento
+| Ubicación | Contenido |
+| --- | --- |
+| `src/app/` | Inicio, historia, genética, ejemplares y estructura global. |
+| `src/app/api/ejemplares/route.ts` | API de lectura del catálogo. |
+| `src/app/api/contacto/route.ts` | Validación de consultas y envío SMTP. |
+| `src/components/` | Encabezado, footer, catálogo y controles de contacto. |
+| `src/lib/catalog.ts` | Tipos y datos de los ejemplares. |
+| `src/lib/contact.ts` | Asuntos permitidos y validación del formulario. |
+| `src/app/globals.css` | Estilos globales y diseño adaptable. |
+| `public/assets/` | Logo e imágenes del sitio. |
 
-La página de ejemplares obtiene los ejemplares del módulo de datos en el servidor y pasa esos datos al componente interactivo. La ruta `GET /api/ejemplares` devuelve los mismos datos en JSON; no hay una llamada de red innecesaria para cargar el catálogo inicial.
+## Estado del proyecto
 
-Se puede sustituir el módulo de datos por una consulta a una base de datos o a Sheets, y agregar rutas de servidor y un panel de administración después de definir el alcance.
+**En desarrollo.** La navegación, el catálogo interactivo y el formulario están implementados. La compilación de producción, la validación del endpoint y el envío SMTP se comprobaron con un servidor de prueba local. La entrega a un buzón real queda pendiente de configurar y probar con el proveedor de correo.
 
-Esta entrega todavía no incluye base de datos, inicio de sesión, permisos, escritura de registros, panel administrativo o conexión con Google Sheets/Drive. La API es de lectura y usa datos de ejemplo. Editar el catálogo requiere modificar `src/lib/catalog.ts`.
+Las fotografías del catálogo son generadas e ilustrativas y los registros son de ejemplo. La información comercial y las fotografías reales deben validarse con la ganadería antes de publicar la oferta definitiva.
 
-Los secretos de una futura integración deben configurarse en variables de entorno del servidor. No deben agregarse al código cliente ni usar el prefijo NEXT_PUBLIC_ si son secretos.
+El catálogo se administra actualmente desde el código. Todavía no incluye base de datos, autenticación, panel administrativo ni conexión con Google Sheets o Drive.
 
-## Contenido provisional
+### Próximas etapas
 
-Las fotografías son imágenes generadas e ilustrativas, no ejemplares reales disponibles. El logo proporcionado está en `public/assets/logo-don-pedro.jpeg`. Los datos, precios y disponibilidad deben validarse antes de publicar.
+- Incorporar fotografías y fichas reales de ejemplares.
+- Configurar y verificar el correo en el entorno de producción.
+- Añadir protección contra spam al formulario antes de abrirlo al público.
+- Definir la fuente de datos y el flujo de actualización del catálogo.
+- Evaluar un panel de administración según las necesidades de la ganadería.
 
-`public/assets/catalog.webp` reúne cuatro fotos en cuadrícula; los estilos muestran una por cada tarjeta. Para fotografías reales es preferible reemplazarlo por imágenes individuales y actualizar el tipo de dato y la tarjeta.
+## Autor
 
-El sitio usa Google Fonts con fuentes alternativas del sistema. Los enlaces de contacto utilizan los datos del formulario y deben revisarse antes de la publicación final.
+**Eduardo Rodríguez Solís** · Desarrollo web
 
-## Publicación
+[Portafolio](https://portafolio-ers.vercel.app/) · [GitHub](https://github.com/eduard165)
 
-Esta entrega es un proyecto local descargable. El enlace de la muestra anterior sigue utilizando la versión HTML. Los cambios locales no actualizan ese enlace automáticamente. No configures `output: 'export'` si vas a utilizar funciones dinámicas del servidor o un panel con escritura de datos.
-
-## Formulario de contacto
-
-El correo del footer se copia al pulsarlo. WhatsApp muestra el icono y el número, y abre el chat sin añadir un mensaje.
-
-El formulario incluye nombre, correo, asunto predefinido, raza y mensaje. Para “Otra consulta”, el mensaje es obligatorio. El servidor valida los campos, envía a la ganadería y establece el correo del visitante como Reply-To. Si hay un error, conserva lo que escribió el visitante.
-
-Para activar el envío:
-
-1. Copia `.env.example` como `.env.local`.
-2. Completa SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD y CONTACT_FROM_EMAIL con los datos de tu proveedor de correo. El remitente debe estar autorizado por ese proveedor. CONTACT_TO_EMAIL es el correo receptor; actualmente udvtz@hotmail.com.
-3. Reinicia `npm run dev`. Al publicar, configura estas mismas variables en el servidor.
-
-El puerto 465 usa TLS directo; otros puertos, normalmente 587, requieren STARTTLS. Las credenciales permanecen en el servidor. No compartas `.env.local` ni lo subas a Git. Sin configuración, el formulario informa que el envío no está disponible y no muestra una confirmación falsa.
-
-Archivos para modificar: `src/components/contact-form.tsx`, `src/components/contact-links.tsx`, `src/lib/contact.ts` (asuntos y validación) y `src/app/api/contacto/route.ts` (envío). El envío real debe probarse con las credenciales de tu proveedor. Antes de abrirlo al público conviene añadir protección contra spam adecuada al hosting.
+La identidad y el logotipo de Ganadería Don Pedro pertenecen a sus respectivos titulares.
